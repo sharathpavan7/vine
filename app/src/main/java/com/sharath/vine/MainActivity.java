@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getHomeList("85", 2, 0, "");
     }
 
     public void getHomeList(String userId, int perPageRecord, final int pageNo, String searchString) {
