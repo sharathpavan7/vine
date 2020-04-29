@@ -44,4 +44,5 @@ dependencies {
     debugImplementation "com.squareup.okhttp3:logging-interceptor:${okhttpLibVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitLibVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpLibVersion}"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }

@@ -1,18 +1,24 @@
 package com.sharath.vine;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 
+import com.sharath.vine.adapter.RecyclerAdapter;
 import com.sharath.vine.api.FameGearApiAdapter;
 import com.sharath.vine.api.FameGearApiService;
+import com.sharath.vine.modell.HotKeys;
+import com.sharath.vine.modell.WHProducts;
 import com.sharath.vine.response.HomeListResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -23,10 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
 
+    private RecyclerView recyclerView;
+    private RecyclerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.rcy);
 
         getHomeList("85", 2, 0, "");
     }
@@ -68,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                                         currentPage = response.body().currentPage;
                                         featuredlist = response.body().featuredList;
                                         hotKeysList = response.body().hotKeyList;*/
+                                        setAdapter(response.body().homeList,
+                                                response.body().featuredList, response.body().hotKeyList, response.body().totalPages);
 
                                     } else {
 
@@ -99,5 +112,26 @@ public class MainActivity extends AppCompatActivity {
             }
         } //else
             //Utils.displayDialog(getActivity(), getString(R.string.no_nw));
+    }
+
+    private void setAdapter(ArrayList<WHProducts> homeList, ArrayList<WHProducts> featuredList,
+                            ArrayList<HotKeys> hotKeyList, int totalPages) {
+        adapter = new RecyclerAdapter(this, homeList, featuredList, hotKeyList, totalPages);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (position) {
+                    case 0:
+                    case 1:
+                        return 2;
+                    default:
+                        return 1;
+                }
+            }
+        });
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setAdapter(adapter);
     }
 }
